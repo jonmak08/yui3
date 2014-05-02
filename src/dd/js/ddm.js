@@ -34,7 +34,7 @@
         },
         _endDrag: function() {
             this._pg_deactivate();
-            this._deactivateTargets();
+            Y.soon(Y.bind(this._pg_deactivate, this));
         },
         /**
         * Deactivates the shim
