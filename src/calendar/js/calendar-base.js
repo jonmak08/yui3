@@ -1056,6 +1056,7 @@ Y.CalendarBase = Y.extend( CalendarBase, Y.Widget, {
      */
     _initCalendarPane : function (baseDate, pane_id) {
         var dateFormat = Y.Intl.get('datatype-date-format'),
+        	shortWeekDays = this.get('strings.very_short_weekdays') || dateFormat.a,
             weekDays = dateFormat.A,
             // Get the first day of the week from the internationalization package, or else use Sunday as default.
             firstday = this.get('strings.first_weekday') || 0,
@@ -1068,7 +1069,6 @@ Y.CalendarBase = Y.extend( CalendarBase, Y.Widget, {
             // Initialize the partial templates object
             partials = {},
 
-            shortWeekDays,
             day,
             row,
             column,
@@ -1077,12 +1077,6 @@ Y.CalendarBase = Y.extend( CalendarBase, Y.Widget, {
             calendar_day_class,
             column_visibility,
             output;
-
-        if (Y.Intl.getLang('calendar-base')) {
-            shortWeekDays = this.get('strings.very_short_weekdays');
-        } else {
-            shortWeekDays = dateFormat.a;
-        }
 
         // Initialize the partial template for the weekday row cells.
         partials.weekday_row = '';
