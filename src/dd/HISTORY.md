@@ -4,7 +4,7 @@ Drag and Drop Change History
 @VERSION@
 ------
 
-* No changes.
+* [#1124][] A User is unable to reduce the size of a Resize node after plugging the resize with Y.Plugin.ResizeProxy
 
 3.18.0
 ------
