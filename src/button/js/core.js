@@ -230,7 +230,7 @@ ButtonCore.prototype = {
     _setVisible: function(value) {
         var node = this.getNode();
 
-        node.toggleClass(ButtonCore.CLASS_NAMES.HIDDEN, value);
+        node.toggleClass(ButtonCore.CLASS_NAMES.HIDDEN, !value);
 
         return value;
     }
@@ -294,7 +294,7 @@ ButtonCore.ATTRS = {
     },
 
     visible: {
-        valuse: true,
+        value: true,
         setter: '_setVisible',
         lazyAdd: false
     }
