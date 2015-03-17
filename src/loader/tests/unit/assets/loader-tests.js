@@ -309,8 +309,8 @@ YUI.add('loader-tests', function(Y) {
             });
             var out = loader.resolve(true);
             Assert.areSame(2, out.js.length, 'Loader did not generate one URL per comboBase');
-            Assert.isTrue(out.js.indexOf('http://secondhost.com/combo?3.5.0/foogg/foogg-min.js') >= 0, 'Group combo URL should be included in the result');
-            Assert.isTrue(out.js.indexOf('http://yui.yahooapis.com/combo?3.5.0/cookie/cookie-min.js') >= 0, 'Default YUI combo URL should be included in the result');
+            Assert.isTrue(Y.Array.indexOf(out.js, 'http://secondhost.com/combo?3.5.0/foogg/foogg-min.js') >= 0, 'Group combo URL should be included in the result');
+            Assert.isTrue(Y.Array.indexOf(out.js, 'http://yui.yahooapis.com/combo?3.5.0/cookie/cookie-min.js') >= 0, 'Default YUI combo URL should be included in the result');
         },
         'test inherited comboBase with groups': function () {
             var loader = new testY.Loader({
@@ -333,6 +333,27 @@ YUI.add('loader-tests', function(Y) {
             var url = out.js[0];
             Assert.isArray(url.match(/3.5.0\/foogg\/foogg-min\.js/), 'Group match should be combo-loaded with the default URL');
             Assert.isArray(url.match(/3.5.0\/cookie\/cookie-min\.js/), 'Default match should combo-load with the group result');
+        },
+        'test inherited combine false with groups': function () {
+            var loader = new testY.Loader({
+                combine: false,
+                groups: {
+                    mods: {
+                        modules: {
+                            'mods-actioninfos': {
+                                path: 'actioninfos/actioninfos.js'
+                            },
+                            'mods-test': {
+                                path: 'test/test.js'
+                            }
+                        }
+                    }
+                },
+                require: ['mods-actioninfos', 'mods-test']
+            });
+
+            var out = loader.resolve(true);
+            Assert.areEqual(2, out.js.length, 'The loader should not have combined the modules within the group.');
         },
         test_resolve_maxurl_length: function() {
             var loader = new testY.Loader({
@@ -407,6 +428,79 @@ YUI.add('loader-tests', function(Y) {
             Assert.areSame(1, out.css.length, 'CSS Files returned more than one');
             Assert.isTrue((out.js[0].indexOf('node-base-debug.js') > 0), 'node-base-debug was not found');
             Assert.isTrue((out.js[0].indexOf('node-core-debug.js') === -1), 'node-core-debug was found');
+        },
+        'test defaultBase with groups': function() {
+            testY.applyConfig({
+                defaultBase: 'http://mycdn.com/path/to/',
+                comboBase: 'http://mycdn.com/path/to/combo?',
+                root: 'yui-3.1.5.0/'
+            });
+            var loader = new testY.Loader({
+                groups: {
+                    test1: {
+                        root: 'zip/',
+                        modules: {
+                            foo: {
+                                filter: 'min'
+                            },
+                            bar: {
+                                filter: 'min'
+                            }
+                        }
+                    },
+                    test2: {
+                        root: 'zap/',
+                        modules: {
+                            baz: {
+                                filter: 'min'
+                            }
+                        }
+
+                    }
+                },
+                require: ['foo', 'bar', 'baz']
+            });
+            var out = loader.resolve(true);
+            Assert.areSame(3, out.js.length, "Loader should not have combined URLs.");
+            Assert.areSame("http://mycdn.com/path/to/zip/foo/foo-min.js", out.js[0], "The url should be ");
+            Assert.areSame("http://mycdn.com/path/to/zip/bar/bar-min.js", out.js[1], "The url should be ");
+            Assert.areSame("http://mycdn.com/path/to/zap/baz/baz-min.js", out.js[2], "The url should be ");
+        },
+        'test base should take precedence over defaultBase': function() {
+            var loader = new testY.Loader({
+                groups: {
+                    test1: {
+                        defaultBase: 'http://mycdn.com/path/to/',
+                        base: 'http://basecdn.com/path/to/base/',
+                        root: 'zip/',
+                        modules: {
+                            foo: {
+                                filter: 'min'
+                            },
+                            bar: {
+                                filter: 'min'
+                            }
+                        }
+                    },
+                    test2: {
+                        defaultBase: 'http://mycdn.com/path/to/',
+                        base: 'http://basecdn.com/path/to/base/',
+                        root: 'zap/',
+                        modules: {
+                            baz: {
+                                filter: 'min'
+                            }
+                        }
+
+                    }
+                },
+                require: ['foo', 'bar', 'baz']
+            });
+            var out = loader.resolve(true);
+            Assert.areSame(3, out.js.length, "Loader should not have combined URLs.");
+            Assert.areSame("http://basecdn.com/path/to/base/foo/foo-min.js", out.js[0], "The url should be ");
+            Assert.areSame("http://basecdn.com/path/to/base/bar/bar-min.js", out.js[1], "The url should be ");
+            Assert.areSame("http://basecdn.com/path/to/base/baz/baz-min.js", out.js[2], "The url should be ");
         },
         test_group_filters: function() {
             var test = this;
@@ -931,7 +1025,7 @@ YUI.add('loader-tests', function(Y) {
             }).use('a-mod-with-opt-dep', function (Y) {
                 setTimeout(function () {
                     test.resume(function () {
-
+                        Assert.isTrue(true);
                     });
                 }, 0);
             });

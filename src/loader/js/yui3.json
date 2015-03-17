@@ -1800,6 +1800,15 @@
             "features"
         ]
     },
+    "loader-pathogen-combohandler": {},
+    "loader-pathogen-encoder": {
+        "use": [
+            "loader-base",
+            "loader-rollup",
+            "loader-yui3",
+            "loader-pathogen-combohandler"
+        ]
+    },
     "loader-rollup": {
         "requires": [
             "loader-base"

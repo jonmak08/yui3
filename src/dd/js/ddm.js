@@ -33,7 +33,7 @@
             }
         },
         _endDrag: function() {
-            this._pg_deactivate();
+            Y.later(0, this, this._pg_deactivate);
             this._deactivateTargets();
         },
         /**

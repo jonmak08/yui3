@@ -111,6 +111,24 @@ ButtonCore.prototype = {
     },
 
     /**
+     * @method show
+     * @description Sets the button's `visible` attribute to `true`
+     * @public
+     */
+    show: function() {
+        this.set('visible', true);
+    },
+
+    /**
+     * @method hide
+     * @description Sets the button's `visible` attribute to `false`
+     * @public
+     */
+    hide: function() {
+        this.set('visible', false);
+    },
+
+    /**
      * @method getNode
      * @description Gets the button's host node
      * @return {Node} The host node instance
@@ -217,6 +235,20 @@ ButtonCore.prototype = {
         node.toggleClass(ButtonCore.CLASS_NAMES.DISABLED, value);
 
         return value;
+    },
+
+    /**
+     * @method _setVisible
+     * @description Setter for the 'visible' ATTR
+     * @param value {boolean} 
+     * @private
+     */
+    _setVisible: function(value) {
+        var node = this.getNode();
+
+        node.toggleClass(ButtonCore.CLASS_NAMES.HIDDEN, !value);
+
+        return value;
     }
 };
 
@@ -275,6 +307,18 @@ ButtonCore.ATTRS = {
         value: false,
         setter: '_setDisabled',
         lazyAdd: false
+    },
+
+    /**
+     * The button's visible/hidden state
+     *
+     * @config visible
+     * @type Boolean
+     */
+    visible: {
+        value: true,
+        setter: '_setVisible',
+        lazyAdd: false
     }
 };
 
@@ -298,6 +342,7 @@ ButtonCore.NAME = "button";
 ButtonCore.CLASS_NAMES = {
     BUTTON  : getClassName('button'),
     DISABLED: getClassName('button', 'disabled'),
+    HIDDEN  : getClassName('button', 'hidden'),
     SELECTED: getClassName('button', 'selected'),
     LABEL   : getClassName('button', 'label')
 };

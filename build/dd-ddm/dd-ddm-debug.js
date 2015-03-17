@@ -35,7 +35,7 @@ YUI.add('dd-ddm', function (Y, NAME) {
             }
         },
         _endDrag: function() {
-            this._pg_deactivate();
+            Y.later(0, this, this._pg_deactivate);
             this._deactivateTargets();
         },
         /**

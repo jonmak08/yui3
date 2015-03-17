@@ -1,10 +1,17 @@
 Rich Text Editor Change History
 ===============================
 
-@VERSION@
+3.18.1
 ------
 
 * No changes.
+
+3.18.0
+------
+
+* [#1895][]: Fixed an issue with backspace breaks on Chrome and Safari. (@macjohnny)
+
+[#1895]: https://github.com/yui/yui3/pull/1895
 
 3.17.2
 ------

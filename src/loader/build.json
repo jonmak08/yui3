@@ -1,15 +1,12 @@
 {
     "name": "loader",
-    "exec": [
-        "./scripts/fetch_gallery_version.js"
-    ],
     "postexec": [
         "./scripts/build_loader_tests.js"
     ],
     "builds": {
         "loader-base": {
             "replace": {
-                "@GALLERY@": "gallery-2014.06.12-21-45",
+                "@GALLERY@": "gallery-2014.06.04-21-38",
                 "@TNT@": "4",
                 "@YUI2@": "2.9.0"
             },
@@ -30,6 +27,11 @@
             "jsfiles": [
                 "rollup.js"
             ]
+        },
+        "loader-pathogen-combohandler": {
+            "jsfiles": [
+                "loader-pathogen-combohandler.js"
+            ]
         }
     },
     "rollups": {
@@ -38,6 +40,14 @@
                 "loader-base",
                 "loader-rollup",
                 "loader-yui3"
+            ]
+        },
+        "loader-pathogen-encoder": {
+            "files": [
+                "loader-base",
+                "loader-rollup",
+                "loader-yui3",
+                "loader-pathogen-combohandler"
             ]
         }
     }

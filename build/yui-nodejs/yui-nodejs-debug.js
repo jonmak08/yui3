@@ -132,6 +132,7 @@ available.
 
             // bind the specified additional modules for this instance
             if (!l) {
+                Y._afterConfig();
                 Y._setup();
             }
         }
@@ -145,6 +146,7 @@ available.
                 Y.applyConfig(args[i]);
             }
 
+            Y._afterConfig();
             Y._setup();
         }
 
@@ -349,7 +351,7 @@ proto = {
                 mods: {}, // flat module map
                 versions: {}, // version module map
                 base: BASE,
-                cdn: BASE + VERSION + '/build/',
+                cdn: BASE + VERSION + '/',
                 // bootstrapped: false,
                 _idx: 0,
                 _used: {},
@@ -476,8 +478,7 @@ proto = {
             throwFail: true,
             useBrowserConsole: true,
             useNativeES5: true,
-            win: win,
-            global: Function('return this')()
+            win: win
         };
 
         //Register the CSS stamp element
@@ -496,7 +497,9 @@ proto = {
 
         Y.config.lang = Y.config.lang || 'en-US';
 
-        Y.config.base = YUI.config.base || Y.Env.getBase(Y.Env._BASE_RE);
+        Y.config.base = YUI.config.base ||
+                (YUI.config.defaultBase && YUI.config.root && YUI.config.defaultBase + YUI.config.root) ||
+                Y.Env.getBase(Y.Env._BASE_RE);
 
         if (!filter || (!('mindebug').indexOf(filter))) {
             filter = 'min';
@@ -504,6 +507,25 @@ proto = {
         filter = (filter) ? '-' + filter : filter;
         Y.config.loaderPath = YUI.config.loaderPath || 'loader/loader' + filter + '.js';
 
+    },
+
+    /**
+    This method is called after all other configuration has been applied to
+    the YUI instance.
+
+    @method _afterConfig
+    @private
+    **/
+    _afterConfig: function () {
+        var Y = this;
+
+        // We need to set up Y.config.global after the rest of the configuration
+        // so that setting it in user configuration prevents the library from
+        // using eval(). This is critical for Content Security Policy enabled
+        // sites and other environments like Chrome extensions
+        if (!Y.config.hasOwnProperty('global')) {
+            Y.config.global = Function('return this')();
+        }
     },
 
     /**
@@ -517,8 +539,9 @@ proto = {
         var i, Y = this,
             core = [],
             mods = YUI.Env.mods,
-            extras = Y.config.core || [].concat(YUI.Env.core); //Clone it..
-
+            extendedCore = Y.config.extendedCore || [],
+            extras = Y.config.core || [].concat(YUI.Env.core).concat(extendedCore); //Clone it..
+   
         for (i = 0; i < extras.length; i++) {
             if (mods[extras[i]]) {
                 core.push(extras[i]);
@@ -2503,8 +2526,40 @@ L.now = Date.now || function () {
  * @since 3.2.0
  */
 L.sub = function(s, o) {
+
+    /**
+    Finds the value of `key` in given object.
+    If the key has a 'dot' notation e.g. 'foo.bar.baz', the function will
+    try to resolve this path if it doesn't exist as a property
+    @example
+        value({ 'a.b': 1, a: { b: 2 } }, 'a.b'); // 1
+        value({ a: { b: 2 } }          , 'a.b'); // 2
+    @param {Object} obj A key/value pairs object
+    @param {String} key
+    @return {Any}
+    @private
+    **/
+    function value(obj, key) {
+
+        var subkey;
+
+        if ( typeof obj[key] !== 'undefined' ) {
+            return obj[key];
+        }
+
+        key    = key.split('.');         // given 'a.b.c'
+        subkey = key.slice(1).join('.'); // 'b.c'
+        key    = key[0];                 // 'a'
+
+        // special case for null as typeof returns object and we don't want that.
+        if ( subkey && typeof obj[key] === 'object' && obj[key] !== null ) {
+            return value(obj[key], subkey);
+        }
+    }
+
     return s.replace ? s.replace(SUBREGEX, function (match, key) {
-        return L.isUndefined(o[key]) ? match : o[key];
+        var val = key.indexOf('.')>-1 ? value(o, key) : o[key];
+        return typeof val === 'undefined' ? match : val;
     }) : s;
 };
 
@@ -3848,7 +3903,10 @@ YUI.Env.parseUA = function(subUA) {
         secure: false,
 
         /**
-         * The operating system.  Currently only detecting windows or macintosh
+         * The operating system.
+         *
+         * Possible values are `windows`, `macintosh`, `android`, `symbos`, `linux`, `rhino` and `ios`.
+         *
          * @property os
          * @type string
          * @default null
@@ -3968,9 +4026,7 @@ YUI.Env.parseUA = function(subUA) {
                     }
                 }
                 if (/ Android/.test(ua)) {
-                    if (/Mobile/.test(ua)) {
-                        o.mobile = 'Android';
-                    }
+                    o.mobile = 'Android';
                     m = ua.match(/Android ([^\s]*);/);
                     if (m && m[1]) {
                         o.android = numberify(m[1]);
@@ -4192,6 +4248,7 @@ YUI.Env.aliases = {
     "io": ["io-base","io-xdr","io-form","io-upload-iframe","io-queue"],
     "json": ["json-parse","json-stringify"],
     "loader": ["loader-base","loader-rollup","loader-yui3"],
+    "loader-pathogen-encoder": ["loader-base","loader-rollup","loader-yui3","loader-pathogen-combohandler"],
     "node": ["node-base","node-event-delegate","node-pluginhost","node-screen","node-style"],
     "pluginhost": ["pluginhost-base","pluginhost-config"],
     "querystring": ["querystring-parse","querystring-stringify"],
@@ -5209,7 +5266,7 @@ YUI.add('loader-base', function (Y, NAME) {
         BUILD = '/build/',
         ROOT = VERSION + '/',
         CDN_BASE = Y.Env.base,
-        GALLERY_VERSION = 'gallery-2014.06.12-21-45',
+        GALLERY_VERSION = 'gallery-2014.06.04-21-38',
         TNT = '2in3',
         TNT_VERSION = '4',
         YUI2_VERSION = '2.9.0',
@@ -6316,11 +6373,17 @@ Y.Loader.prototype = {
      */
     addGroup: function(o, name) {
         var mods = o.modules,
-            self = this, i, v;
+            self = this,
+            defaultBase = o.defaultBase || Y.config.defaultBase,
+            i, v;
 
         name = name || o.name;
         o.name = name;
         self.groups[name] = o;
+
+        if (!o.base && defaultBase && o.root) {
+            o.base = defaultBase + o.root;
+        }
 
         if (o.patterns) {
             for (i in o.patterns) {
@@ -7347,7 +7410,7 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
                         test: void 0,
                         temp: true
                     }), mname);
-                    if (found.configFn) {
+                    if (m && found.configFn) {
                         m.configFn = found.configFn;
                     }
                 }
@@ -7902,7 +7965,8 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
     resolve: function(calc, sorted) {
         var self     = this,
             resolved = { js: [], jsMods: [], css: [], cssMods: [] },
-            addSingle;
+            addSingle,
+            usePathogen = Y.config.comboLoader && Y.config.customComboBase;
 
         if (self.skin.overrides || self.skin.defaultSkin !== DEFAULT_SKIN || self.ignoreRegistered) {
             self._resetModules();
@@ -7945,7 +8009,7 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
 
         /*jslint vars: true */
         var inserted     = (self.ignoreRegistered) ? {} : self.inserted,
-            comboSources = {},
+            comboSources,
             maxURLLength,
             comboMeta,
             comboBase,
@@ -7953,7 +8017,9 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
             group,
             mod,
             len,
-            i;
+            i,
+            hasComboModule = false;
+
         /*jslint vars: false */
 
         for (i = 0, len = sorted.length; i < len; i++) {
@@ -7993,7 +8059,8 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
                 addSingle(mod);
                 continue;
             }
-
+            hasComboModule = true;
+            comboSources = comboSources || {};
             comboSources[comboBase] = comboSources[comboBase] ||
                 { js: [], jsMods: [], css: [], cssMods: [] };
 
@@ -8003,19 +8070,46 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
             comboMeta.maxURLLength  = maxURLLength || self.maxURLLength;
 
             comboMeta[mod.type + 'Mods'].push(mod);
+            if (mod.type === JS || mod.type === CSS) {
+                resolved[mod.type + 'Mods'].push(mod);
+            }
         }
+        //only encode if we have something to encode
+        if (hasComboModule) {
+            if (usePathogen) {
+                resolved = this._pathogenEncodeComboSources(resolved);
+            } else {
+                resolved = this._encodeComboSources(resolved, comboSources);
+            }
+        }
+        return resolved;
+    },
 
-        // TODO: Refactor the encoding logic below into its own method.
-
-        /*jslint vars: true */
+    /**
+     * Encodes combo sources and appends them to an object hash of arrays from `loader.resolve`.
+     *
+     * @method _encodeComboSources
+     * @param {Object} resolved The object hash of arrays in which to attach the encoded combo sources.
+     * @param {Object} comboSources An object containing relevant data about modules.
+     * @return Object
+     * @private
+     */
+    _encodeComboSources: function(resolved, comboSources) {
         var fragSubset,
             modules,
             tmpBase,
             baseLen,
             frags,
             frag,
-            type;
-        /*jslint vars: false */
+            type,
+            mod,
+            maxURLLength,
+            comboBase,
+            comboMeta,
+            comboSep,
+            i,
+            len,
+            self = this;
 
         for (comboBase in comboSources) {
             if (comboSources.hasOwnProperty(comboBase)) {
@@ -8067,12 +8161,10 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
                                 resolved[type].push(self._filter(tmpBase, null, comboMeta.group));
                             }
                         }
-                        resolved[type + 'Mods'] = resolved[type + 'Mods'].concat(modules);
                     }
                 }
             }
         }
-
         return resolved;
     },
 
@@ -8113,7 +8205,6 @@ Y.log('Undefined module: ' + mname + ', matched a pattern: ' +
         self.insert();
     }
 };
-
 
 
 }, '@VERSION@', {"requires": ["get", "features"]});
@@ -10160,6 +10251,15 @@ Y.mix(YUI.Env[Y.version].modules, {
             "features"
         ]
     },
+    "loader-pathogen-combohandler": {},
+    "loader-pathogen-encoder": {
+        "use": [
+            "loader-base",
+            "loader-rollup",
+            "loader-yui3",
+            "loader-pathogen-combohandler"
+        ]
+    },
     "loader-rollup": {
         "requires": [
             "loader-base"
@@ -11201,7 +11301,7 @@ Y.mix(YUI.Env[Y.version].modules, {
         ]
     }
 });
-YUI.Env[Y.version].md5 = '7ef189c2dd804768209f77293bfb00d9';
+YUI.Env[Y.version].md5 = '2fd2be6b12ee9f999b4367499ae61aae';
 
 
 }, '@VERSION@', {"requires": ["loader-base"]});

@@ -103,7 +103,7 @@ Y.mix(Widget.prototype, {
             id : attrs.id,
             boundingBox : attrs.boundingBox,
             contentBox : attrs.contentBox,
-            srcNode : attrs.srcNode
+            srcNode : attrs.srcNode || Y.Object(Widget.ATTRS[SRC_NODE])
         };
 
         this.addAttrs(preAttrs, userVals, lazy);
