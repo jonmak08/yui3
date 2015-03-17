@@ -110,10 +110,20 @@ ButtonCore.prototype = {
         this.set('disabled', true);
     },
 
+    /**
+     * @method show
+     * @description Sets the button's `visible` attribute to `true`
+     * @public
+     */
     show: function() {
         this.set('visible', true);
     },
 
+    /**
+     * @method hide
+     * @description Sets the button's `visible` attribute to `false`
+     * @public
+     */
     hide: function() {
         this.set('visible', false);
     },
@@ -227,6 +237,12 @@ ButtonCore.prototype = {
         return value;
     },
 
+    /**
+     * @method _setVisible
+     * @description Setter for the 'visible' ATTR
+     * @param value {boolean} 
+     * @private
+     */
     _setVisible: function(value) {
         var node = this.getNode();
 
@@ -293,6 +309,12 @@ ButtonCore.ATTRS = {
         lazyAdd: false
     },
 
+    /**
+     * The button's visible/hidden state
+     *
+     * @config visible
+     * @type Boolean
+     */
     visible: {
         value: true,
         setter: '_setVisible',
