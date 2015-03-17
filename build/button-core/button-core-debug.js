@@ -112,6 +112,14 @@ ButtonCore.prototype = {
         this.set('disabled', true);
     },
 
+    show: function() {
+        this.set('visible', true);
+    },
+
+    hide: function() {
+        this.set('visible', false);
+    },
+
     /**
      * @method getNode
      * @description Gets the button's host node
@@ -219,6 +227,14 @@ ButtonCore.prototype = {
         node.toggleClass(ButtonCore.CLASS_NAMES.DISABLED, value);
 
         return value;
+    },
+
+    _setVisible: function(value) {
+        var node = this.getNode();
+
+        node.toggleClass(ButtonCore.CLASS_NAMES.HIDDEN, value);
+
+        return value;
     }
 };
 
@@ -277,6 +293,12 @@ ButtonCore.ATTRS = {
         value: false,
         setter: '_setDisabled',
         lazyAdd: false
+    },
+
+    visible: {
+        valuse: true,
+        setter: '_setVisible',
+        lazyAdd: false
     }
 };
 
@@ -300,6 +322,7 @@ ButtonCore.NAME = "button";
 ButtonCore.CLASS_NAMES = {
     BUTTON  : getClassName('button'),
     DISABLED: getClassName('button', 'disabled'),
+    HIDDEN  : getClassName('button', 'hidden'),
     SELECTED: getClassName('button', 'selected'),
     LABEL   : getClassName('button', 'label')
 };

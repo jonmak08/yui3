@@ -74,8 +74,7 @@ this the same font stack that Normalize.css sets for the `body`.
 
 .yui3-g [class *= "yui3-u"] {
     font-family: sans-serif;
-}
-/*!
+}/*!
 Pure v0.4.2
 Copyright 2014 Yahoo! Inc. All rights reserved.
 Licensed under the BSD License.
@@ -293,6 +292,5 @@ https://github.com/yui/pure/blob/master/LICENSE.md
 .yui3-u-24-24 {
     width: 100%;
 }
-
 /* YUI CSS Detection Stamp */
 #yui3-css-stamp.cssgrids { display: none; }
