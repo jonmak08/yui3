@@ -34,3 +34,15 @@
     right: 5px;
     width: 300px;
 }
+
+#nestedChild {
+    height: 100px;
+    width: 100px;
+}
+#nestedParent {
+    height: 200px;
+    width: 200px;
+}
+.nested {
+    border: 1px solid #000;
+}

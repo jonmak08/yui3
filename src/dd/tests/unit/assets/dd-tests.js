@@ -820,6 +820,28 @@ YUI.add('dd-tests', function(Y) {
 
                 Y.Assert.isTrue(radioInput.get('checked'));
             }, 100);
+        },
+        'test: drag delegation on nested elements': function() {
+            var nested = new Y.DD.Delegate({
+                container: '#nested',
+                nodes: '.nested',
+                target: true,
+                handles: ['.header']
+            });
+
+            var nestedParent = Y.one('#nestedParent');
+            var nestedChild = Y.one('#nestedChild');
+
+            nestedChild.simulate('mousedown');
+            nestedChild.simulate('mouseup');
+           
+            var listeners = Y.Event.getListeners(nestedParent, 'mousedown');
+
+            Y.Assert.isNull(listeners, 'mousedown event handler are not deleted');
+
+            listeners = Y.Event.getListeners(nestedChild, 'mousedown');
+
+            Y.Assert.isNull(listeners, 'mousedown event handler are not deleted');
         }
     };
 
