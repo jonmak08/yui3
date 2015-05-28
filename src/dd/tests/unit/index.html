@@ -26,6 +26,11 @@
     <div id="radio">
         <input type="radio" name="test" checked></input>
     </div>
+    <div id="nested">
+        <div class="nested" id="nestedParent">
+            <div class="nested" id="nestedChild"></div>
+        </div>
+    </div>
 <script>
 
 YUI({
@@ -42,7 +47,7 @@ YUI({
         }
 
     }
-}).use('dd-base', 'test-console', 'test', function(Y) {
+}).use('dd-base', 'node-event-simulate', 'test-console', 'test', function(Y) {
     new Y.Test.Console().render('#log');
 
 });
