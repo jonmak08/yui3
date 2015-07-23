@@ -55,7 +55,7 @@ function _swf(uri, yid, uid) {
             uri + '" width="0" height="0">' +
             '<param name="movie" value="' + uri + '">' +
             '<param name="FlashVars" value="yid=' + yid + '&uid=' + uid + '">' +
-            '<param name="allowScriptAccess" value="always">' +
+            '<param name="allowScriptAccess" value="sameDomain">' +
             '</object>',
         c = d.createElement('div');
 

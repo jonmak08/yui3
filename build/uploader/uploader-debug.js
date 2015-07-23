@@ -90,7 +90,7 @@ Y.extend(Uploader, Y.Base, {
     var oElement = Node.one(this.get("boundingBox"));
 
 	var params = {version: "10.0.45",
-  	          	  fixedAttributes: {allowScriptAccess:"always", allowNetworking:"all", scale: "noscale"},
+  	          	  fixedAttributes: {allowScriptAccess:"sameDomain", allowNetworking:"all", scale: "noscale"},
 	              flashVars: {}};
 
 	if (this.get("buttonSkin") != "") {
