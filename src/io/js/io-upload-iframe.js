@@ -253,7 +253,7 @@ Y.mix(Y.IO.prototype, {
         f.submit();
         io.start(o, c);
         if (c.data) {
-            io._removeData(f, fields);
+            io.on('io:end', io._removeData.bind(io, f, fields));
         }
 
         return {
