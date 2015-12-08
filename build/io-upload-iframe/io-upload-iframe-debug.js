@@ -255,7 +255,10 @@ Y.mix(Y.IO.prototype, {
         f.submit();
         io.start(o, c);
         if (c.data) {
-            io._removeData(f, fields);
+            var _onIoEndHandler = io.on('io:end', function (event) {
+                _onIoEndHandler.detach();
+                io._removeData(f, fields);
+            });
         }
 
         return {
