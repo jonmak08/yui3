@@ -69,12 +69,17 @@ Y.mix(Y.IO.prototype, {
             i, l;
 
         for (i = 0, l = m.length - 1; i < l; i++) {
-            o[i] = d.createElement('input');
-            o[i].type = 'hidden';
-            o[i].name = _d(m[i].substring(m[i].lastIndexOf('&') + 1));
-            o[i].value = (i + 1 === l) ? _d(m[i + 1]) : _d(m[i + 1].substring(0, (m[i + 1].lastIndexOf('&'))));
-            f.appendChild(o[i]);
-            Y.log('key: ' +  o[i].name + ' and value: ' + o[i].value + ' added as form data.', 'info', 'io');
+            var name = _d(m[i].substring(m[i].lastIndexOf('&') + 1));
+            var input = f.one('input[name='+name+']');
+
+            if(!input){
+                o[i] = d.createElement('input');
+                o[i].type = 'hidden';
+                o[i].name = name;
+                o[i].value = (i + 1 === l) ? _d(m[i + 1]) : _d(m[i + 1].substring(0, (m[i + 1].lastIndexOf('&'))));
+                f.appendChild(o[i]);
+                Y.log('key: ' +  o[i].name + ' and value: ' + o[i].value + ' added as form data.', 'info', 'io');
+            }
         }
 
         return o;
@@ -253,7 +258,10 @@ Y.mix(Y.IO.prototype, {
         f.submit();
         io.start(o, c);
         if (c.data) {
-            io._removeData(f, fields);
+            var _onIoEndHandler = io.on('io:end', function (event) {
+                _onIoEndHandler.detach();
+                io._removeData(f, fields);
+            });
         }
 
         return {
