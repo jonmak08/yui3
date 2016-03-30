@@ -11,23 +11,24 @@ YUI.add('calendar', function (Y, NAME) {
  * @module calendar
  */
 
-var getCN             = Y.ClassNameManager.getClassName,
-    CALENDAR          = 'calendar',
-    KEY_DOWN          = 40,
-    KEY_UP            = 38,
-    KEY_LEFT          = 37,
-    KEY_RIGHT         = 39,
-    KEY_ENTER         = 13,
-    KEY_SPACE         = 32,
-    CAL_DAY_SELECTED  = getCN(CALENDAR, 'day-selected'),
-    CAL_DAY_HILITED   = getCN(CALENDAR, 'day-highlighted'),
-    CAL_DAY           = getCN(CALENDAR, 'day'),
-    CAL_PREVMONTH_DAY = getCN(CALENDAR, 'prevmonth-day'),
-    CAL_NEXTMONTH_DAY = getCN(CALENDAR, 'nextmonth-day'),
-    CAL_GRID          = getCN(CALENDAR, 'grid'),
-    ydate             = Y.DataType.Date,
-    CAL_PANE          = getCN(CALENDAR, 'pane'),
-    os                = Y.UA.os;
+var getCN              = Y.ClassNameManager.getClassName,
+    CALENDAR           = 'calendar',
+    KEY_DOWN           = 40,
+    KEY_UP             = 38,
+    KEY_LEFT           = 37,
+    KEY_RIGHT          = 39,
+    KEY_ENTER          = 13,
+    KEY_SPACE          = 32,
+    CAL_DAY_SELECTED   = getCN(CALENDAR, 'day-selected'),
+    CAL_DAY_HILITED    = getCN(CALENDAR, 'day-highlighted'),
+    SELECTION_DISABLED = getCN(CALENDAR, 'selection-disabled'),
+    CAL_DAY            = getCN(CALENDAR, 'day'),
+    CAL_PREVMONTH_DAY  = getCN(CALENDAR, 'prevmonth-day'),
+    CAL_NEXTMONTH_DAY  = getCN(CALENDAR, 'nextmonth-day'),
+    CAL_GRID           = getCN(CALENDAR, 'grid'),
+    ydate              = Y.DataType.Date,
+    CAL_PANE           = getCN(CALENDAR, 'pane'),
+    os                 = Y.UA.os;
 
 /** Create a calendar view to represent a single or multiple
     * month range of dates, rendered as a grid with date and
@@ -274,7 +275,8 @@ Y.Calendar = Y.extend(Calendar, Y.CalendarBase, {
         var clickedCell = ev.currentTarget,
             clickedCellIsDay = clickedCell.hasClass(CAL_DAY) &&
                                 !clickedCell.hasClass(CAL_PREVMONTH_DAY) &&
-                                !clickedCell.hasClass(CAL_NEXTMONTH_DAY),
+                                !clickedCell.hasClass(CAL_NEXTMONTH_DAY) &&
+                                !clickedCell.hasClass(SELECTION_DISABLED),
 
         clickedCellIsSelected = clickedCell.hasClass(CAL_DAY_SELECTED),
         selectedDate;
