@@ -74,7 +74,14 @@ var PARENT_NODE = 'parentNode',
                 className = token.className;
                 tagName = token.tagName || '*';
 
-                if (root.getElementsByTagName) { // non-IE lacks DOM api on doc frags
+                var getElementsByTagName = true;
+
+                try {
+                    getElementsByTagName = root.getElementsByTagName;
+                }
+                catch (e) {}
+
+                if (getElementsByTagName) { // non-IE lacks DOM api on doc frags
                     // try ID first, unless no root.all && root not in document
                     // (root.all works off document, but not getElementById)
                     if (id && (root.all || (root.nodeType === 9 || Y.DOM.inDoc(root)))) {
