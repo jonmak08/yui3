@@ -4,6 +4,11 @@ Drag and Drop Change History
 @VERSION@
 ------
 
+* [#1124][] A User is unable to reduce the size of a Resize node after plugging the resize with Y.Plugin.ResizeProxy
+
+3.18.0
+------
+
 * [#1831][] Add `[contenteditable]` to the list of invalid drag handles. (Andrew Nicols)
 
 3.17.2
