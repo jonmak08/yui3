@@ -42,7 +42,7 @@ else if(uA.ie) {
     try
     {
         ax6 = new ActiveXObject(sF + "." + sF + ".6");
-        ax6.AllowScriptAccess = "always";
+        ax6.AllowScriptAccess = "sameDomain";
     }
     catch (e)
     {
