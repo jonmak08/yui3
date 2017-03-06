@@ -1176,6 +1176,16 @@ Y.Loader.prototype = {
 
         if (!o.langPack && o.lang) {
             langs = yArray(o.lang);
+
+            // Setup root package by default as a fallback
+            // for languages that are not defined
+            packName = this.getLangPackName(ROOT_LANG, name);
+            smod = this.getModuleInfo(packName);
+
+            if (!smod) {
+                this._addLangPack(null, o, packName);
+            }
+
             for (j = 0; j < langs.length; j++) {
                 lang = langs[j];
                 packName = this.getLangPackName(lang, name);
@@ -1227,6 +1237,16 @@ Y.Loader.prototype = {
                     if (s.lang && s.lang.length) {
 
                         langs = yArray(s.lang);
+
+                        // Setup root package by default as a fallback
+                        // for languages that are not defined
+                        packName = this.getLangPackName(ROOT_LANG, name);
+                        smod = this.getModuleInfo(packName);
+
+                        if (!smod) {
+                            this._addLangPack(null, o, packName);
+                        }
+
                         for (j = 0; j < langs.length; j++) {
                             lang = langs[j];
                             packName = this.getLangPackName(lang, name);
