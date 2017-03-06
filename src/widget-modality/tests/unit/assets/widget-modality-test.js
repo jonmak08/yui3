@@ -7,7 +7,11 @@ var Assert      = Y.Assert,
 
 // -- Suite --------------------------------------------------------------------
 suite      = new Y.Test.Suite('Widget: Modality');
-TestWidget = Y.Base.create('testWidget', Y.Widget, [Y.WidgetModality]);
+TestWidget = Y.Base.create('testWidget', Y.Widget, [Y.WidgetModality], {
+    renderUI: function() {
+        this.get('contentBox').append('<iframe class="modalIframe"></iframe>');
+    }
+});
 
 // -- Lifecycle ----------------------------------------------------------------
 suite.add(new Y.Test.Case({
@@ -142,6 +146,53 @@ suite.add(new Y.Test.Case({
         Assert.areSame('none', before_clone.one('.yui3-widget-mask').getStyle('display'));
         Assert.areSame('none', after_clone.one('.yui3-widget-mask').getStyle('display'));
 
+    },
+
+    'WidgetModality should prevent focus on external iframes': function() {
+        var iframes = Y.all('iframe:not(.modalIframe)'),
+            index,
+            previousTabIndex = [];
+
+        for (var index = 0; index < iframes.size(); index++) {
+            previousTabIndex.push(iframes.item(index).get('tabIndex'));
+        }
+
+        this.widget = new TestWidget({
+            modal : true,
+            render: '#test'
+        });
+
+        this.widget.show();
+        for (var index = 0; index < iframes.size(); index++) {
+            Y.Assert.areEqual(
+                -1,
+                iframes.item(index).get('tabIndex'),
+                'tabIndex should be set to -1 when widget is visible'
+            );
+        }
+
+        this.widget.hide();
+        for (var index = 0; index < iframes.size(); index++) {
+            Y.Assert.areEqual(
+                previousTabIndex[index],
+                iframes.item(index).get('tabIndex'),
+                'tabIndex should be restored when widget is hidden'
+            );
+        }
+    },
+
+    'WidgetModality should not prevent focus on internal iframes': function() {
+        this.widget = new TestWidget({
+            modal : true,
+            render: '#test'
+        });
+
+        this.widget.show();
+        Y.Assert.areNotEqual(
+            -1,
+            this.widget.get('contentBox').one('iframe').get('tabIndex'),
+            'tabIndex should not be set to -1 for internal iframes'
+        );
     }
 }));
 

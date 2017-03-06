@@ -147,7 +147,7 @@ SchemaXML = {
         try {
             result = SchemaXML._getXPathResult(locator, context, xmldoc);
             while ((res = result.iterateNext())) {
-                value = res.textContent || res.value || res.text || res.innerHTML || res.innerText || null;
+                value = res.textContent || res.value || res.text || res.innerHTML || res.innerText || '';
             }
 
             // FIXME: Why defer to a method that is mixed into this object?

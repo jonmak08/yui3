@@ -463,6 +463,8 @@
     },
     "calendar-base": {
         "lang": [
+            "ca",
+            "ca-ES",
             "de",
             "en",
             "es",
@@ -1798,6 +1800,15 @@
         "requires": [
             "get",
             "features"
+        ]
+    },
+    "loader-pathogen-combohandler": {},
+    "loader-pathogen-encoder": {
+        "use": [
+            "loader-base",
+            "loader-rollup",
+            "loader-yui3",
+            "loader-pathogen-combohandler"
         ]
     },
     "loader-rollup": {

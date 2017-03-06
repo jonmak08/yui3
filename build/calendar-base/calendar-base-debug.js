@@ -1697,6 +1697,8 @@ Y.CalendarBase = Y.extend( CalendarBase, Y.Widget, {
         "cssgrids"
     ],
     "lang": [
+        "ca",
+        "ca-ES",
         "de",
         "en",
         "es",

@@ -33,7 +33,7 @@ var DOT = '.',
     Y_DOM = Y.DOM,
 
     Y_Node = function(node) {
-        if (!this.getDOMNode) { // support optional "new"
+        if (!this.getDOMNode && !Y.instanceOf(this, Y_Node)) { // support optional "new"
             return new Y_Node(node);
         }
 
@@ -282,7 +282,7 @@ Y_Node.one = function(node) {
             if (!node) {
                 return null; // NOTE: return
             }
-        } else if (node.getDOMNode) {
+        } else if (node.getDOMNode && Y.instanceOf(node, Y_Node)) {
             return node; // NOTE: return
         }
 

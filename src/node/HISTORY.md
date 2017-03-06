@@ -1,7 +1,12 @@
 Node Change History
 ===================
 
-@VERSION@
+3.18.1
+------
+
+* No changes.
+
+3.18.0
 ------
 
 * No changes.
@@ -9,7 +14,7 @@ Node Change History
 3.17.2
 ------
 
-* No changes.
+* [#1848][] NodeList.importMethod should respect the alternative name it was provided with. (Andrew Nicols)
 
 3.17.1
 ------

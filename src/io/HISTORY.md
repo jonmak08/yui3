@@ -1,7 +1,12 @@
 IO Utility Change History
 =========================
 
-@VERSION@
+3.18.1
+------
+
+* No changes.
+
+3.18.0
 ------
 
 * Document return value of IO.send and Y.io. ([#1882][]: @andrewnicols)

@@ -78,12 +78,16 @@
             var tar = e.currentTarget,
                 dd = this.dd,
                 dNode = tar,
-                config = this.get('dragConfig');
+                config = this.get('dragConfig'),
+                node = dd.get('node');
 
             if (tar.test(this.get(NODES)) && !tar.test(this.get('invalid'))) {
                 this._shimState = Y.DD.DDM._noShim;
                 Y.DD.DDM._noShim = true;
                 this.set('currentNode', tar);
+                if (node.inDoc()) {
+                    dd._unprep();
+                }
                 dd.set('node', tar);
                 if (config && config.dragNode) {
                     dNode = config.dragNode;

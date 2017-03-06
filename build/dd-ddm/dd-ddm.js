@@ -35,7 +35,7 @@ YUI.add('dd-ddm', function (Y, NAME) {
             }
         },
         _endDrag: function() {
-            this._pg_deactivate();
+            Y.later(0, this, this._pg_deactivate);
             this._deactivateTargets();
         },
         /**
@@ -100,7 +100,7 @@ YUI.add('dd-ddm', function (Y, NAME) {
                 top: '0',
                 left: '0',
                 position: 'absolute',
-                zIndex: '9999',
+                zIndex: '99999',
                 overflow: 'hidden',
                 backgroundColor: 'red',
                 display: 'none',

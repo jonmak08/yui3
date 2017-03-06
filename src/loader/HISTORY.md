@@ -1,15 +1,34 @@
 YUI Loader Change History
 =========================
 
-@VERSION@
+3.18.1
 ------
 
-* No changes.
+* [#1974][]: Fix metadata for loader
+
+[#1974]: https://github.com/yui/yui3/pull/1974 
+
+3.18.0
+------
+
+* [#1963][]: Setup Y.config.global to allow for YUI to work on CSP regulated sites and environments like Chrome extensions by providing the global in the user configuration.  
+* [#1959][]: Fixed an issue with `m` is null when `found.configfn` return `false`
+* [#1954][]: Add new configuration option called `defaultBase` to minimize the amount of settings to define per group.
+* [#1950][]: Incorporate pathogen encoding logic in a separate module under loader
+* [#1938][]: Fixed Gallery build tag (@okuryu)
+
+[#1963]: https://github.com/yui/yui3/pull/1963
+[#1959]: https://github.com/yui/yui3/pull/1959
+[#1954]: https://github.com/yui/yui3/pull/1954
+[#1950]: https://github.com/yui/yui3/pull/1950
+[#1938]: https://github.com/yui/yui3/pull/1938
 
 3.17.2
 ------
 
 * Fix a bug in 3.17.1 where there comboBase was no longer inherited from the default group. ([#1837][]: @andrewnicols)
+
+[#1837]: https://github.com/yui/yui3/pull/1837
 
 3.17.1
 ------
