@@ -1222,19 +1222,15 @@
             }
 
             this.mouseXY = [ev.pageX, ev.pageY];
-            if (!this._dragThreshMet) {
+            if (!this._dragThreshMet && !ev.touches) {
                 var diffX = Math.abs(this.startXY[0] - ev.pageX),
                 diffY = Math.abs(this.startXY[1] - ev.pageY);
                 if (diffX > this.get('clickPixelThresh') || diffY > this.get('clickPixelThresh')) {
                     this._dragThreshMet = true;
                     this.start();
-                    //This only happens on gestures to stop the page from scrolling
-                    if (ev && ev.preventDefault) {
-                        ev.preventDefault();
-                    }
                     this._alignNode([ev.pageX, ev.pageY]);
                 }
-            } else {
+            } else if (this._dragThreshMet) {
                 if (this._clickTimeout) {
                     this._clickTimeout.cancel();
                 }
