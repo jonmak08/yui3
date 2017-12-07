@@ -778,8 +778,8 @@
             }
             if (this.validClick(ev)) {
                 this._fixIEMouseDown(ev);
-                if (Drag.START_EVENT.indexOf('gesture') !== 0) {
-                    //Only do these if it's not a gesture
+                if (!ev.touches) {
+                    //Only do these if it's not a touch
                     if (this.get('haltDown')) {
                         Y.log('Halting MouseDown', 'info', 'drag');
                         ev.halt();
@@ -793,7 +793,13 @@
 
                 DDM.activeDrag = this;
 
-                this._clickTimeout = Y.later(this.get('clickTimeThresh'), this, this._timeoutCheck);
+                var clickTimeThresh = this.get('clickTimeThresh');
+
+                if (ev.touches) {
+                    clickTimeThresh = Math.max(750, clickTimeThresh);
+                }
+
+                this._clickTimeout = Y.later(clickTimeThresh, this, this._timeoutCheck);
             }
             this.fire(EV_AFTER_MOUSE_DOWN, { ev: ev });
         },
@@ -1216,19 +1222,15 @@
             }
 
             this.mouseXY = [ev.pageX, ev.pageY];
-            if (!this._dragThreshMet) {
+            if (!this._dragThreshMet && !ev.touches) {
                 var diffX = Math.abs(this.startXY[0] - ev.pageX),
                 diffY = Math.abs(this.startXY[1] - ev.pageY);
                 if (diffX > this.get('clickPixelThresh') || diffY > this.get('clickPixelThresh')) {
                     this._dragThreshMet = true;
                     this.start();
-                    //This only happens on gestures to stop the page from scrolling
-                    if (ev && ev.preventDefault) {
-                        ev.preventDefault();
-                    }
                     this._alignNode([ev.pageX, ev.pageY]);
                 }
-            } else {
+            } else if (this._dragThreshMet) {
                 if (this._clickTimeout) {
                     this._clickTimeout.cancel();
                 }
