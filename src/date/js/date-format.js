@@ -68,6 +68,7 @@ var Dt = {
         C: function (d) { return xPad(parseInt(d.getFullYear()/100, 10), 0); },
         d: ["getDate", "0"],
         e: ["getDate", " "],
+        E: "getDate",
         g: function (d) { return xPad(parseInt(Dt.formats.G(d)%100, 10), 0); },
         G: function (d) {
                 var y = d.getFullYear();
@@ -197,6 +198,7 @@ var Dt = {
      *  <dt>%d</dt> <dd>day of the month as a decimal number (range 01 to 31)</dd>
      *  <dt>%D</dt> <dd>same as %m/%d/%y</dd>
      *  <dt>%e</dt> <dd>day of the month as a decimal number, a single digit is preceded by a space (range " 1" to "31")</dd>
+     *  <dt>%E</dt> <dd>day of the month as a decimal number (range 1 to 31)</dd>
      *  <dt>%F</dt> <dd>same as %Y-%m-%d (ISO 8601 date format)</dd>
      *  <dt>%g</dt> <dd>like %G, but without the century</dd>
      *  <dt>%G</dt> <dd>The 4-digit year corresponding to the ISO week number</dd>
@@ -283,7 +285,7 @@ var Dt = {
         }
 
         // Now replace formats (do not run in a loop otherwise %%a will be replace with the value of %a)
-        var str = format.replace(/%([aAbBCdegGHIjklmMpPsSuUVwWyYzZ%])/g, replace_formats);
+        var str = format.replace(/%([aAbBCdeEgGHIjklmMpPsSuUVwWyYzZ%])/g, replace_formats);
 
         replace_aggs = replace_formats = undefined;
 
