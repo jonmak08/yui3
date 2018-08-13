@@ -86,24 +86,32 @@ Y.CategoryAxis = Y.Base.create("categoryAxis", Y.Axis, [Y.CategoryImpl], {
             data = this.get("data"),
             offset = edgeOffset;
         dataValues = dataValues || data;
-        for(i = 0; i < count; i = i + 1)
+        for(i = 0; i < data.length; i = i + 1)
         {
-            labelValue = dataValues[i];
-            labelIndex = Y.Array.indexOf(data, labelValue);
-            if(Y_Lang.isNumber(labelIndex) && labelIndex > -1)
-            {
-                point = {};
-                point[staticCoord] = constantVal;
-                point[dynamicCoord] = this._getCoordFromValue(
-                    min,
-                    max,
-                    layoutLength,
-                    labelIndex,
-                    offset
-                );
-                points.push(point);
-                values.push(labelValue);
-            }
+        	for (j = 0; j < dataValues.length; j = j + 1)
+        	{
+        		if (data[i] != dataValues[j])
+        		{
+        			continue;
+        		}
+        		labelValue = dataValues[i];
+        		labelIndex = i;
+        		if(Y_Lang.isNumber(labelIndex) && labelIndex > -1)
+        		{
+        			point = {};
+        			point[staticCoord] = constantVal;
+        			point[dynamicCoord] = this._getCoordFromValue(
+        				min,
+        				max,
+        				layoutLength,
+        				labelIndex,
+        				offset
+        			);
+        			points.push(point);
+        			values.push(labelValue);
+        		}
+			break;
+                }
         }
         return {
             points: points,
