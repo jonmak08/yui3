@@ -502,12 +502,25 @@
                 }
 
                 if (path) {
-                   val = O.setValue(Y.clone(currVal), path, val);
+                    var copyVal = Object.assign({}, currVal);
 
-                   if (val === undefined) {
-                       Y.log('Set attribute path:' + strPath + ', aborted; Path is invalid', 'warn', 'attribute');
-                       allowSet = false;
-                   }
+                    var pathNode = copyVal;
+                    var leafIdx = path.length - 1;
+
+                    for (var i = 0; i < leafIdx && pathNode; i++) {
+                        pathNode = pathNode[path[i]];
+                    }
+
+                    if (pathNode) {
+                        delete pathNode[path[leafIdx]];
+                    }
+
+                    val = O.setValue(Y.clone(copyVal), path, val);
+
+                    if (val === undefined) {
+                        Y.log('Set attribute path:' + strPath + ', aborted; Path is invalid', 'warn', 'attribute');
+                        allowSet = false;
+                    }
                 }
 
                 if (allowSet) {
