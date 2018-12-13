@@ -6,6 +6,6 @@
 ,"c":"%a, %d de %b de %Y %Hh%Mmin%Ss %Z"
 ,"p":["AM","PM"]
 ,"P":["am","pm"]
-,"x":"%d/%m/%y"
+,"x":"%d/%m/%Y"
 ,"X":"%Hh%Mmin%Ss"
 }
