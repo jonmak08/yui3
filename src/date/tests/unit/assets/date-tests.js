@@ -190,7 +190,7 @@ YUI.add('date-tests', function(Y) {
             ASSERT.areSame("Dec December", output, "Expected %b %B format.");
 
             output = dateUS.format(date, {format:"%x"});
-            ASSERT.areSame("12/17/95", output, "Expected %x format.");
+            ASSERT.areSame("12/17/1995", output, "Expected %x format.");
 
             output = dateUS.format(date, {format:"%r"});
             ASSERT.areSame(getHours(date) + ":24:00 " + getMidday(date, "en-US"), output, "Expected %r format.");
@@ -216,7 +216,7 @@ YUI.add('date-tests', function(Y) {
             ASSERT.areSame("déc. décembre", output, "Expected %b %B format.");
 
             output = dateFR.format(date, {format:"%x"});
-            ASSERT.areSame("17/12/95", output, "Expected %x format.");
+            ASSERT.areSame("17/12/1995", output, "Expected %x format.");
 
             output = dateFR.format(date, {format:"%r"});
             ASSERT.areSame(getHours(date) + ":24:00 " + getMidday(date, "fr-FR"), output, "Expected %r format.");
@@ -242,7 +242,7 @@ YUI.add('date-tests', function(Y) {
             ASSERT.areSame("12월 12월", output, "Expected %b %B format.");
 
             output = dateKR.format(date, {format:"%x"});
-            ASSERT.areSame("95. 12. 17.", output, "Expected %x format.");
+            ASSERT.areSame("1995. 12. 17.", output, "Expected %x format.");
 
             output = dateKR.format(date, {format:"%r"});
             ASSERT.areSame(getHours(date) + ":24:00 " + getMidday(date, "ko-KR"), output, "Expected %r format.");
