@@ -108,6 +108,18 @@ CalendarNavigator.NEXT_MONTH_CONTROL_TEMPLATE = '<a class="yui3-u {next_month_cl
 
 Y.extend(CalendarNavigator, Y.Plugin.Base, {
 
+    /**
+     * Strings and properties derived from the internationalization packages
+     * for the calendarnavigator.
+     *
+     * @attribute strings
+     * @type Object
+     * @protected
+     */
+    strings : {
+        valueFn: function() { return Y.Intl.get("calendarnavigation"); }
+    },
+
     _eventAttachments : {},
     _controls: {},
 
@@ -274,8 +286,8 @@ Y.extend(CalendarNavigator, Y.Plugin.Base, {
             headerCell = host.get(CONTENT_BOX).one("." + CAL_HD);
 
         CalendarNavigator.CALENDARNAV_STRINGS.control_tabindex = host.get("tabIndex");
-        CalendarNavigator.CALENDARNAV_STRINGS.prev_month_arialabel = "Go to previous month";
-        CalendarNavigator.CALENDARNAV_STRINGS.next_month_arialabel = "Go to next month";
+        CalendarNavigator.CALENDARNAV_STRINGS.prev_month_arialabel = this.get('strings.go_to_previous_month');;
+        CalendarNavigator.CALENDARNAV_STRINGS.next_month_arialabel = this.get('strings.go_to_next_month');
 
         this._controls.prevMonth = this._renderPrevControls();
         this._controls.nextMonth = this._renderNextControls();

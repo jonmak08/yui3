@@ -522,6 +522,11 @@ Y.mix(YUI.Env[Y.version].modules, {
         "skinnable": true
     },
     "calendarnavigator": {
+        "lang" : [
+            "en",
+            "es-ES",
+            "eu-ES"
+        ],
         "requires": [
             "plugin",
             "classnamemanager",

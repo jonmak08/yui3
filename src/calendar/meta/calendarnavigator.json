@@ -1,5 +1,10 @@
 {
     "calendarnavigator": {
+        "lang" : [
+            "en",
+            "es-ES",
+            "eu-ES"
+        ],
         "requires": [
             "plugin",
             "classnamemanager",
