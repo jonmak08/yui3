@@ -31,11 +31,10 @@ var WIDGET       = 'widget',
             el = doc.createElement('div');
             if (el && el.style) {
                 el.style.position = 'fixed';
-                el.style.top = '10px';
                 root = doc.body;
                 if (root && root.appendChild && root.removeChild) {
                     root.appendChild(el);
-                    isSupported = (el.offsetTop === 10);
+                    isSupported = (el.style.position === 'fixed');
                     root.removeChild(el);
                 }
             }
